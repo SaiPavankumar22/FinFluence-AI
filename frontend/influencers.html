@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Influencers · Market Intelligence Analyzer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="/"><i class="bi bi-graph-up-arrow me-2"></i>Market Intel Analyzer</a>
+      <div class="navbar-nav flex-row gap-2">
+        <a class="nav-link" href="/"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+        <a class="nav-link active" href="/influencers"><i class="bi bi-people me-1"></i>Influencers</a>
+        <a class="nav-link" href="/analytics"><i class="bi bi-bar-chart me-1"></i>Analytics</a>
+        <a class="nav-link" href="/search"><i class="bi bi-search me-1"></i>Search</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h4 class="mb-1 fw-bold">Monitored Influencers</h4>
+        <p class="text-muted mb-0" style="font-size:.85rem">Track financial content creators and analyze their reels automatically</p>
+      </div>
+      <button class="btn btn-primary d-flex align-items-center gap-2"
+              data-bs-toggle="modal" data-bs-target="#addInfluencerModal">
+        <i class="bi bi-person-plus-fill"></i> Add Influencer
+      </button>
+    </div>
+
+    <div id="add-error" class="alert alert-danger d-none"></div>
+
+    <div class="row g-3" id="influencer-list">
+      <div class="col-12 text-center text-muted py-5">
+        <span class="skeleton d-inline-block" style="width:200px;height:16px;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Influencer Modal -->
+  <div class="modal fade" id="addInfluencerModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold"><i class="bi bi-instagram me-2 text-accent"></i>Add Instagram Influencer</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body pt-3">
+          <form id="add-influencer-form">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Instagram Username</label>
+              <div class="input-group">
+                <span class="input-group-text" style="background:var(--panel-2);border-color:var(--border);color:var(--muted)">@</span>
+                <input type="text" class="form-control" id="username-input"
+                       placeholder="finance_guru" required autocomplete="off">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Display Name <span class="text-muted fw-normal">(optional)</span></label>
+              <input type="text" class="form-control" id="display-name-input"
+                     placeholder="Auto-filled from profile">
+            </div>
+            <div class="panel p-3 mb-3" style="border-radius:10px">
+              <div class="d-flex gap-2" style="font-size:.82rem">
+                <i class="bi bi-info-circle text-accent mt-1 flex-shrink-0"></i>
+                <div class="text-muted">
+                  Up to <strong class="text-text">15 recent reels</strong> will be fetched and stored.
+                  Historical reels are <strong class="text-text">not auto-processed</strong> — use the
+                  <strong class="text-text">Summarize</strong> button on each reel to analyze it on demand.
+                  Newly posted reels are processed automatically.
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
+                    id="submit-btn">
+              <i class="bi bi-plus-circle"></i> Add & Fetch Reels
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/common.js"></script>
+  <script src="/static/js/influencers.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard · Market Intelligence Analyzer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="/"><i class="bi bi-graph-up-arrow me-2"></i>Market Intel Analyzer</a>
+      <div class="navbar-nav flex-row gap-2">
+        <a class="nav-link active" href="/"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+        <a class="nav-link" href="/influencers"><i class="bi bi-people me-1"></i>Influencers</a>
+        <a class="nav-link" href="/analytics"><i class="bi bi-bar-chart me-1"></i>Analytics</a>
+        <a class="nav-link" href="/search"><i class="bi bi-search me-1"></i>Search</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+
+    <!-- Stats Row -->
+    <div class="row g-3 mb-4" id="stats-row">
+      <div class="col-12 text-center text-muted py-4">Loading stats…</div>
+    </div>
+
+    <!-- Pipeline Status -->
+    <div id="pipeline-status-bar" class="mb-4 d-none"></div>
+
+    <!-- Main content -->
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div class="section-title mb-0" style="margin:0">Latest Analyses</div>
+          <a href="/influencers" class="text-muted" style="font-size:.82rem">View all influencers →</a>
+        </div>
+        <div class="row g-3" id="latest-reels"></div>
+      </div>
+      <div class="col-lg-4">
+        <div class="section-title" style="margin-top:0">Trending Topics</div>
+        <div class="panel p-3" id="trending-topics">
+          <div class="text-muted small">Loading…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/common.js"></script>
+  <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

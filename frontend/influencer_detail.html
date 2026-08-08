@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Influencer · Market Intelligence Analyzer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="/"><i class="bi bi-graph-up-arrow me-2"></i>Market Intel Analyzer</a>
+      <div class="navbar-nav flex-row gap-2">
+        <a class="nav-link" href="/"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+        <a class="nav-link active" href="/influencers"><i class="bi bi-people me-1"></i>Influencers</a>
+        <a class="nav-link" href="/analytics"><i class="bi bi-bar-chart me-1"></i>Analytics</a>
+        <a class="nav-link" href="/search"><i class="bi bi-search me-1"></i>Search</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <!-- Back link -->
+    <a href="/influencers" class="d-inline-flex align-items-center gap-1 text-muted mb-3"
+       style="font-size:.85rem; text-decoration:none">
+      <i class="bi bi-arrow-left"></i> All Influencers
+    </a>
+
+    <!-- Profile Header -->
+    <div id="influencer-header" class="influencer-header mb-4">
+      <div class="d-flex align-items-center gap-2">
+        <span class="skeleton" style="width:72px;height:72px;border-radius:50%;display:block"></span>
+        <div>
+          <span class="skeleton d-block mb-2" style="width:160px;height:22px"></span>
+          <span class="skeleton d-block" style="width:100px;height:14px"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs + Reel Grid -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
+      <div class="filter-tabs" id="filter-tabs">
+        <button class="filter-tab active" data-filter="all">All</button>
+        <button class="filter-tab" data-filter="processed"><i class="bi bi-check-circle me-1"></i>Analyzed</button>
+        <button class="filter-tab" data-filter="pending"><i class="bi bi-clock me-1"></i>Pending</button>
+        <button class="filter-tab" data-filter="error"><i class="bi bi-exclamation-triangle me-1"></i>Errors</button>
+      </div>
+      <div id="reel-count-label" class="text-muted" style="font-size:.82rem"></div>
+    </div>
+
+    <div class="row g-3" id="reel-list"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/common.js"></script>
+  <script src="/static/js/influencer_detail.js"></script>
+</body>
+</html>

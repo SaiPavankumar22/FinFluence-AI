@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reel Analysis · Market Intelligence Analyzer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="/"><i class="bi bi-graph-up-arrow me-2"></i>Market Intel Analyzer</a>
+      <div class="navbar-nav flex-row gap-2">
+        <a class="nav-link" href="/"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+        <a class="nav-link" href="/influencers"><i class="bi bi-people me-1"></i>Influencers</a>
+        <a class="nav-link" href="/analytics"><i class="bi bi-bar-chart me-1"></i>Analytics</a>
+        <a class="nav-link" href="/search"><i class="bi bi-search me-1"></i>Search</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4" id="reel-content">
+    <div class="text-center text-muted py-5">
+      <div class="spinner-border text-accent mb-3" role="status"></div>
+      <div>Loading analysis…</div>
+    </div>
+  </div>
+
+  <!-- ── Edit Analysis Modal ──────────────────────────────── -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header border-bottom border-secondary">
+          <h5 class="modal-title" id="editModalLabel">
+            <i class="bi bi-pencil-square me-2 text-accent"></i>Edit Analysis
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-3">
+            Correct any inaccuracies from transcription errors — e.g. wrong stock ticker, wrong sentiment, or garbled company names.
+          </p>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Headline</label>
+            <input id="edit-headline" type="text" class="form-control" placeholder="One-line headline for this reel" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Executive Summary</label>
+            <textarea id="edit-summary" class="form-control" rows="5" placeholder="Full structured summary…"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Sentiment</label>
+            <select id="edit-sentiment" class="form-select">
+              <option value="Bullish">Bullish</option>
+              <option value="Bearish">Bearish</option>
+              <option value="Neutral">Neutral</option>
+            </select>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Stocks <span class="text-muted fw-normal">(comma-separated)</span></label>
+              <input id="edit-stocks" type="text" class="form-control" placeholder="RELIANCE, HDFC, TCS" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">IPOs <span class="text-muted fw-normal">(comma-separated)</span></label>
+              <input id="edit-ipos" type="text" class="form-control" placeholder="XYZ Ltd IPO" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Sectors <span class="text-muted fw-normal">(comma-separated)</span></label>
+              <input id="edit-sectors" type="text" class="form-control" placeholder="Banking, IT, FMCG" />
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Economic Events <span class="text-muted fw-normal">(comma-separated)</span></label>
+              <input id="edit-economic" type="text" class="form-control" placeholder="RBI Rate Cut, Budget 2026" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Geopolitical Events <span class="text-muted fw-normal">(comma-separated)</span></label>
+              <input id="edit-geo" type="text" class="form-control" placeholder="US Tariffs, India-China" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Risks <span class="text-muted fw-normal">(one per line)</span></label>
+            <textarea id="edit-risks" class="form-control" rows="3" placeholder="Each risk on a new line…"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Opportunities <span class="text-muted fw-normal">(one per line)</span></label>
+            <textarea id="edit-opportunities" class="form-control" rows="3" placeholder="Each opportunity on a new line…"></textarea>
+          </div>
+
+          <div class="mb-1">
+            <label class="form-label fw-semibold">Retail Investor Takeaways <span class="text-muted fw-normal">(one per line)</span></label>
+            <textarea id="edit-takeaways" class="form-control" rows="3" placeholder="Each takeaway on a new line…"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer border-top border-secondary">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="edit-save-btn" onclick="submitEditModal()">
+            <i class="bi bi-check2 me-2"></i>Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/common.js"></script>
+  <script src="/static/js/reel_analysis.js"></script>
+</body>
+</html>
