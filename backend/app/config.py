@@ -1,7 +1,19 @@
-from pydantic_settings import BaseSettings
+from functools import cached_property
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+    # development | production
+    app_env: str = "development"
+
+    # MongoDB Atlas: mongodb+srv://user:pass@cluster.mongodb.net/?retryWrites=true&w=majority
     mongo_uri: str = "mongodb://localhost:27017"
     mongo_db_name: str = "market_intel"
 
@@ -35,8 +47,23 @@ class Settings(BaseSettings):
     instagram_username: str = ""
     instagram_password: str = ""
 
-    class Config:
-        env_file = ".env"
+    # Comma-separated origins for the Vercel frontend, or "*" for local/dev.
+    # Example: https://finfluence.vercel.app,http://localhost:3000
+    cors_origins: str = "*"
+
+    # Serve HTML from FastAPI (local monolith). Set false on Render when UI is on Vercel.
+    serve_frontend: bool = True
+
+    @cached_property
+    def cors_origin_list(self) -> list[str]:
+        raw = (self.cors_origins or "*").strip()
+        if raw == "*":
+            return ["*"]
+        return [origin.strip() for origin in raw.split(",") if origin.strip()]
+
+    @property
+    def is_production(self) -> bool:
+        return self.app_env.lower() in {"prod", "production"}
 
 
 settings = Settings()

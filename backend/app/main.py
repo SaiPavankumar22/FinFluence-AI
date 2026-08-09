@@ -1,35 +1,40 @@
 import logging
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
-from app.database import init_indexes
-from app.services.scheduler import start_scheduler
+from app.config import settings
+from app.database import init_indexes, ping_database
 from app.json_utils import MongoJSONResponse
-from app.routers import influencers, reels, dashboard, analytics, search
+from app.routers import analytics, dashboard, influencers, reels, search
+from app.services.scheduler import start_scheduler
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
-# Keep terminal readable: hide library chatter, keep our pipeline/scheduler logs
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("httpcore").setLevel(logging.WARNING)
 logging.getLogger("apscheduler").setLevel(logging.WARNING)
-logging.getLogger("faster_whisper").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
+
+FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("══════════════════════════════════════")
     logger.info(" Market Intelligence Analyzer starting")
+    logger.info(" env=%s  serve_frontend=%s", settings.app_env, settings.serve_frontend)
     logger.info("══════════════════════════════════════")
+    Path(settings.download_dir).mkdir(parents=True, exist_ok=True)
+    await ping_database()
     await init_indexes()
     logger.info("Database indexes initialized")
     start_scheduler()
@@ -45,7 +50,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_origin_list,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -56,39 +62,52 @@ app.include_router(dashboard.router)
 app.include_router(analytics.router)
 app.include_router(search.router)
 
-FRONTEND_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend"))
-app.mount("/static", StaticFiles(directory=os.path.join(FRONTEND_DIR, "static")), name="static")
+
+@app.get("/health")
+@app.get("/api/health")
+async def health():
+    return {
+        "status": "ok",
+        "env": settings.app_env,
+        "db": settings.mongo_db_name,
+    }
 
 
-def _page(name: str) -> FileResponse:
-    return FileResponse(os.path.join(FRONTEND_DIR, name))
+def _mount_frontend() -> None:
+    static_dir = FRONTEND_DIR / "static"
+    if not static_dir.is_dir():
+        logger.warning("Frontend static dir missing at %s — skipping UI mount", static_dir)
+        return
+
+    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
+    def _page(name: str) -> FileResponse:
+        return FileResponse(FRONTEND_DIR / name)
+
+    @app.get("/")
+    async def dashboard_page():
+        return _page("index.html")
+
+    @app.get("/influencers")
+    async def influencers_page():
+        return _page("influencers.html")
+
+    @app.get("/influencer/{influencer_id}")
+    async def influencer_detail_page(influencer_id: str):
+        return _page("influencer_detail.html")
+
+    @app.get("/reel/{reel_db_id}")
+    async def reel_page(reel_db_id: str):
+        return _page("reel_analysis.html")
+
+    @app.get("/analytics")
+    async def analytics_page():
+        return _page("analytics.html")
+
+    @app.get("/search")
+    async def search_page():
+        return _page("search.html")
 
 
-@app.get("/")
-async def dashboard_page():
-    return _page("index.html")
-
-
-@app.get("/influencers")
-async def influencers_page():
-    return _page("influencers.html")
-
-
-@app.get("/influencer/{influencer_id}")
-async def influencer_detail_page(influencer_id: str):
-    return _page("influencer_detail.html")
-
-
-@app.get("/reel/{reel_db_id}")
-async def reel_page(reel_db_id: str):
-    return _page("reel_analysis.html")
-
-
-@app.get("/analytics")
-async def analytics_page():
-    return _page("analytics.html")
-
-
-@app.get("/search")
-async def search_page():
-    return _page("search.html")
+if settings.serve_frontend:
+    _mount_frontend()
