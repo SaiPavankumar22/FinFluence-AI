@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/influencers", "destination": "/influencers.html" },
+    { "source": "/analytics", "destination": "/analytics.html" },
+    { "source": "/search", "destination": "/search.html" },
+    { "source": "/influencer/:id", "destination": "/influencer_detail.html" },
+    { "source": "/reel/:id", "destination": "/reel_analysis.html" }
+  ],
+  "headers": [
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: finfluence-api
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SERVE_FRONTEND
+        value: "false"
+      - key: DOWNLOAD_DIR
+        value: /tmp/downloads
+      - key: MONGO_URI
+        sync: false
+      - key: MONGO_DB_NAME
+        value: market_intel
+      - key: CORS_ORIGINS
+        sync: false
+      - key: NEBIUS_API_KEY
+        sync: false
+      - key: NEBIUS_BASE_URL
+        value: https://api.studio.nebius.ai/v1
+      - key: NEBIUS_MODEL
+        value: google/gemma-3-27b-it
+      - key: SARVAM_API_SUBSCRIPTION_KEY
+        sync: false
+      - key: TRANSCRIPTION_PROVIDER
+        value: sarvam
+      - key: CHECK_INTERVAL_MINUTES
+        value: "15"
+      - key: HISTORICAL_REELS_LIMIT
+        value: "15"

@@ -70,7 +70,7 @@ function renderLeaderboard(list) {
       <div class="topic-bar">
         <span style="min-width:2rem;font-size:.9rem">${medal}</span>
         <span class="topic-name">
-          <a href="/influencers/${escapeHtml(row.id || "")}" class="text-decoration-none" style="color:var(--text)">
+          <a href="/influencer/${escapeHtml(row.id || "")}" class="text-decoration-none" style="color:var(--text)">
             ${escapeHtml(row.display_name || row.username)}
           </a>
           ${row.display_name && row.username !== row.display_name

@@ -1,4 +1,7 @@
-const API_BASE = "";
+const API_BASE = (window.APP_CONFIG && window.APP_CONFIG.API_BASE
+  ? String(window.APP_CONFIG.API_BASE)
+  : ""
+).replace(/\/$/, "");
 
 async function apiGet(path) {
   const res = await fetch(API_BASE + path);

@@ -1,0 +1,7 @@
+{
+  "name": "finfluence-frontend",
+  "private": true,
+  "scripts": {
+    "build": "node build-config.js"
+  }
+}
